@@ -25,9 +25,6 @@ from pyadroute.utils.path import euclidean_distance, distance_of_two_point_ahead
 import numpy as np
 from param_helper import ParamHelper
 
-
-from std_msgs.msg import String
-
 logger = get_logger("NavigationNode")
 
 
@@ -38,12 +35,6 @@ class NavigationNode:
     last_cmd: MasterCmd
 
     def __init__(self, name):
-
-        self.cmd_pause = False
-
-
-
-
 
         rospy.init_node(name)
 
@@ -87,12 +78,6 @@ class NavigationNode:
         self.pub_obstacle_area = rospy.Publisher("/obstacle_area", Marker, queue_size=1)
         self.pub_cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
 
-
-        rospy.Subscriber("/nav_cmd",String, self.nav_cmd_callback,queue_size=10)
-
-
-
-
         self.sub_cloudpoint = rospy.Subscriber(
             self.opt.TOPIC_CLOUD_POINT, PointCloud2, self.callback_cloudpoint
         )
@@ -116,32 +101,6 @@ class NavigationNode:
             self.opt.TOPIC_TRAFFIC_SIGNAL, TrafficSignal, self.callback_traffic_signal
         )
 
-    def nav_cmd_callback(self, msg):
-        rospy.logwarn("[ROS_HELPER] Received cmd: %s" % msg.data)
-        if msg.data == "/pause":
-            self.cmd_pause = True
-        elif msg.data == "/continue":
-            self.cmd_pause = False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def run(self):
         pub_osm_thread = threading.Thread(target=self.thread_publish_osm)
         pub_osm_thread.start()
@@ -150,11 +109,8 @@ class NavigationNode:
 
         rate = rospy.Rate(self.loop_rate)
         while not rospy.is_shutdown():
-            #测试以下，只有当没有收到暂停指令时才运行
-            if not self.cmd_pause:
-                self.process_loop()
+            self.process_loop()
             rate.sleep()
-            rospy.spin()
 
         pub_osm_thread.join()
         rospy.loginfo("------Navigation Node stop-------")
