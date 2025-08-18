@@ -25,6 +25,9 @@ from pyadroute.utils.path import euclidean_distance, distance_of_two_point_ahead
 import numpy as np
 from param_helper import ParamHelper
 
+
+from std_msgs.msg import String
+
 logger = get_logger("NavigationNode")
 
 
@@ -85,7 +88,7 @@ class NavigationNode:
         self.pub_cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
 
 
-        
+        rospy.Subscriber("/nav_cmd",String, self.nav_cmd_callback,queue_size=10)
 
 
 
@@ -113,6 +116,32 @@ class NavigationNode:
             self.opt.TOPIC_TRAFFIC_SIGNAL, TrafficSignal, self.callback_traffic_signal
         )
 
+    def nav_cmd_callback(self, msg):
+        rospy.logwarn("[ROS_HELPER] Received cmd: %s" % msg.data)
+        if msg.data == "/pause":
+            self.cmd_pause = True
+        elif msg.data == "/continue":
+            self.cmd_pause = False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def run(self):
         pub_osm_thread = threading.Thread(target=self.thread_publish_osm)
         pub_osm_thread.start()
@@ -125,6 +154,7 @@ class NavigationNode:
             if not self.cmd_pause:
                 self.process_loop()
             rate.sleep()
+            rospy.spin()
 
         pub_osm_thread.join()
         rospy.loginfo("------Navigation Node stop-------")
