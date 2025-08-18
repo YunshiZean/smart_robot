@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-
-# © Copyright 2025 smg@buu.edu.cn
-# SPDX-License-Identifier: GPL-3.0-or-later
-
+#0.0.5
 import queue
 from queue import Queue, SimpleQueue
 from pyadroute.utils.logger import get_logger
@@ -25,6 +22,9 @@ from pyadroute.utils.path import euclidean_distance, distance_of_two_point_ahead
 import numpy as np
 from param_helper import ParamHelper
 
+
+from std_msgs.msg import String
+
 logger = get_logger("NavigationNode")
 
 
@@ -35,6 +35,9 @@ class NavigationNode:
     last_cmd: MasterCmd
 
     def __init__(self, name):
+
+        self.cmd_pause = False
+        self.arrive_jishu = False
 
         rospy.init_node(name)
 
@@ -77,6 +80,12 @@ class NavigationNode:
         self.pub_point = rospy.Publisher("/path_endpoint", MarkerArray, queue_size=1)
         self.pub_obstacle_area = rospy.Publisher("/obstacle_area", Marker, queue_size=1)
         self.pub_cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
+        
+
+        rospy.Subscriber("/nav_cmd",String, self.nav_cmd_callback,queue_size=10)
+        rospy.Subscriber("/nav_goal", PointStamped, self.nav_goal_callback,queue_size=10)
+        self.result = rospy.Publisher("/result", String, queue_size=1)
+
 
         self.sub_cloudpoint = rospy.Subscriber(
             self.opt.TOPIC_CLOUD_POINT, PointCloud2, self.callback_cloudpoint
@@ -101,6 +110,39 @@ class NavigationNode:
             self.opt.TOPIC_TRAFFIC_SIGNAL, TrafficSignal, self.callback_traffic_signal
         )
 
+    def nav_cmd_callback(self, msg):
+        rospy.logerr(": %s" % msg.data)
+        if msg.data == "/pause":
+            rospy.logerr(": pause")
+            self.cmd_pause = True
+        elif msg.data == "/continue":
+            rospy.logerr(": continue")
+            self.cmd_pause = False
+
+
+    def nav_goal_callback(self, msg):
+        try:
+            self.target_queue.put_nowait((msg.point.x, msg.point.y))
+            logger.info("收到: %s", str((msg.point.x, msg.point.y)))
+        except queue.Full:
+            rospy.logerr("已经塞满了")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def run(self):
         pub_osm_thread = threading.Thread(target=self.thread_publish_osm)
         pub_osm_thread.start()
@@ -109,7 +151,9 @@ class NavigationNode:
 
         rate = rospy.Rate(self.loop_rate)
         while not rospy.is_shutdown():
-            self.process_loop()
+            #测试以下，只有当没有收到暂停指令时才运行
+            if self.cmd_pause == False:
+                self.process_loop()
             rate.sleep()
 
         pub_osm_thread.join()
@@ -117,10 +161,11 @@ class NavigationNode:
 
     def process_loop(self):
         target_point = None
-        try:
-            target_point = self.target_queue.get_nowait()
-        except queue.Empty:
-            pass
+        if self.navigation.pathw is None:
+            try:
+                target_point = self.target_queue.get_nowait()
+            except queue.Empty:
+                pass
 
         self.master_cmd_logic()
         tracked_pose = self.tracked_pose  # thread safe
@@ -140,11 +185,13 @@ class NavigationNode:
                 nearest_point_index,
                 point_target_idx,
             ) = self.navigation.process_loop(tracked_pose.pose)
-
+            if self.navigation.Is_arrive:
+                self.result.publish(String("/arrive"))
+                self.navigation.Is_arrive = False
             linear_speed, angle_speed = self.control_dbl_car_distance(
                 linear_speed, angle_speed, nearest_point_index
             )
-
+            
             self.publish_cmd_vel(linear_speed, angle_speed)
         else:
             self.publish_cmd_vel(0, 0)
@@ -286,12 +333,24 @@ class NavigationNode:
         return is_new
 
     def control_dbl_car_distance(self, linear_speed, angle_speed, orin_index):
+        """
+        控制双车距离的函数，用于调整当前车辆与前车的距离保持在安全范围内
+        
+        参数:
+            linear_speed: 当前线速度
+            angle_speed: 当前角速度
+            orin_index: 路径上的索引位置
+            
+        返回值:
+            tuple: (调整后的线速度, 调整后的角速度)
+        """
         if (
             self.double_car_pursuit
             and abs(linear_speed) > 0
             and orin_index >= 0
             and self.navigation.is_path_valid()
         ):
+            # 获取前车位置信息
             other_car_pose = self.other_car_pose
             if other_car_pose is not None:
                 p1 = (
@@ -299,17 +358,23 @@ class NavigationNode:
                     other_car_pose.pose.position.y,
                 )
 
+                # 计算当前车辆与前车在路径上的距离
                 distance, dest_idx = distance_of_two_point_ahead_path(
                     self.navigation.pathw.path, orin_index, p1
                 )
+                
+                # 根据距离判断是否需要调整速度
                 if distance < self.opt.DBL_CAR_STOP_DIST:
+                    # 距离过近，停止行驶
                     linear_speed = 0
                     # angle_speed = 0
                 elif distance > 0:
+                    # 距离适中，进行跟随控制
                     dist_diff = distance - self.opt.DBL_CAR_FOLLOW_DIST
                     Kp_dist = 0.5
                     linear_speed = linear_speed + Kp_dist * dist_diff
 
+                    # 限制最大线速度
                     if linear_speed > self.opt.MAX_LINEAR_SPEED:
                         linear_speed = self.opt.MAX_LINEAR_SPEED
 
