@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/ros/ros_ws/smart_robot_ws/devel/include/**",
+        "/home/ros/ros_ws/catkin_ws/install_isolated/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/ros/ros_ws/smart_robot_ws/src/autonomous_driving/include/**",
+        "/home/ros/ros_ws/sensor_ws/src/ldlidar_stl_ros/include/**",
+        "/home/ros/ros_ws/smart_robot_ws/src/turn_on_wheeltec_robot/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-arm64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

@@ -1,0 +1,11 @@
+<launch>
+
+  <include file="$(find ldlidar_stl_ros)/launch/stl_27l.launch"/>
+  <!-- <include file="$(find lslidar_driver)/launch/lslidar_serial.launch"/> -->
+
+  <include file="$(find wit_ros_imu)/launch/imu.launch"/>
+  <!-- <include file="$(find fdilink_imu)/launch/imu.launch"/> -->
+
+  <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
+
+</launch>

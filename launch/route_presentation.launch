@@ -1,0 +1,19 @@
+<launch>
+
+
+<arg name="map_file" default="$(find autonomous_driving)/map/map_pcd_001.yaml"/>
+<arg name="osm_file" default="$(find autonomous_driving)/map/map_pcd_001.osm"/>
+<arg name="txt_dir" default="$(find autonomous_driving)/txt"/>
+
+<node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+<node pkg="autonomous_driving" type="route_presentation.py" name="route_presentation_node" output="screen" respawn="false">
+ <param name="osm_filename" type="string" value="$(arg osm_file)"/> 
+ <param name="txt_dir" type="string" value="$(arg txt_dir)"/> 
+ <param name="loop_rate" type="int" value="100"/> 
+</node>
+
+<node name="rviz" pkg="rviz" type="rviz" required="true"
+      args="-d $(find autonomous_driving)/map/osm_presentation.rviz" />
+
+</launch>

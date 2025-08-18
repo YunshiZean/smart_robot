@@ -1,0 +1,10 @@
+
+<launch>
+
+    <include file="$(find turn_on_wheeltec_robot)/launch/turn_on_wheeltec_robot.launch"/>
+    <include file="$(find autonomous_driving)/launch/sensor.launch"/>
+    <include file="$(find autonomous_driving)/launch/localization.launch"/>
+    <include file="$(find autonomous_driving)/launch/navigation.launch"/>
+    <include file="$(find turn_on_wheeltec_robot)/launch/mqtt.launch"/>
+
+</launch>

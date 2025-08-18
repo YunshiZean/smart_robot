@@ -1,0 +1,6 @@
+image: /home/ros/ros_ws/smart_robot_ws/src/autonomous_driving/map/map_20250301172320.pgm
+resolution: 0.05
+origin: [-7.54619, -7.66993, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="smg@buu.edu.cn">
+  <node id="-50000" action="modify" visible="true" lon="2.252489558093922" lat="0.523332871812622" />
+  <node id="-50001" action="modify" visible="true" lon="2.252489558093922" lat="0.8020971501096099" />
+  <node id="-50002" action="modify" visible="true" lon="2.2620352393471137" lat="0.8647187862585" />
+  <node id="-50003" action="modify" visible="true" lon="2.2903822424121625" lat="0.9254376956810848" />
+  <node id="-50004" action="modify" visible="true" lon="2.336669257945207" lat="0.9824089650398058" />
+  <node id="-50005" action="modify" visible="true" lon="2.3994898784016385" lat="1.0339015511440532" />
+  <node id="-50006" action="modify" visible="true" lon="2.476935331017657" lat="1.078350877821558" />
+  <node id="-50007" action="modify" visible="true" lon="2.566652474904812" lat="1.1144063747736652" />
+  <node id="-50008" action="modify" visible="true" lon="2.665915300045162" lat="1.140972513970448" />
+  <node id="-50009" action="modify" visible="true" lon="2.7717077557262257" lat="1.1572420967155264" />
+  <node id="-50010" action="modify" visible="true" lon="2.8808153917157036" lat="1.16272077997" />
+  <node id="-50011" action="modify" visible="true" lon="3.0882956752794612" lat="1.1567012094557434" />
+  <node id="-50012" action="modify" visible="true" lon="3.1887354004417148" lat="1.1412230681686566" />
+  <node id="-50013" action="modify" visible="true" lon="3.2793433855003737" lat="1.096303752619125" />
+  <node id="-50014" action="modify" visible="true" lon="3.3512502895749385" lat="1.0263402783844118" />
+  <node id="-50015" action="modify" visible="true" lon="3.397417363889737" lat="0.9381811577867989" />
+  <node id="-50016" action="modify" visible="true" lon="3.4133254535459105" lat="0.8404560197910929" />
+  <node id="-50017" action="modify" visible="true" lon="3.4150823712662692" lat="0.3731159061755527" />
+  <node id="-50018" action="modify" visible="true" lon="3.4041269811795907" lat="0.27262195373329234" />
+  <node id="-50019" action="modify" visible="true" lon="3.3720074026493254" lat="0.17897649807586458" />
+  <node id="-50020" action="modify" visible="true" lon="3.3209125318721995" lat="0.09856132224988823" />
+  <node id="-50021" action="modify" visible="true" lon="3.254324399853406" lat="0.03685658759554311" />
+  <node id="-50022" action="modify" visible="true" lon="3.176780877747932" lat="-0.001932630192372109" />
+  <node id="-50023" action="modify" visible="true" lon="3.0835500000000025" lat="-0.005150000000000432" />
+  <node id="-50024" action="modify" visible="true" lon="2.171184625251973" lat="0.028760032985154282" />
+  <node id="-50025" action="modify" visible="true" lon="1.9814375114531817" lat="0.03754462158695038" />
+  <node id="-50026" action="modify" visible="true" lon="1.0116189298149187" lat="0.06916914055341561" />
+  <node id="-50027" action="modify" visible="true" lon="0.14798460692688487" lat="0.09391029869891732" />
+  <node id="-50028" action="modify" visible="true" lon="-0.02243641194795387" lat="0.095667216419276" />
+  <node id="-50029" action="modify" visible="true" lon="-0.1351916361235741" lat="0.11225674340973235" />
+  <node id="-50030" action="modify" visible="true" lon="-0.23690959334504136" lat="0.16040142589324713" />
+  <node id="-50031" action="modify" visible="true" lon="-0.3176334212488392" lat="0.23538852690460477" />
+  <node id="-50032" action="modify" visible="true" lon="-0.3694613091237624" lat="0.329877786530961" />
+  <node id="-50033" action="modify" visible="true" lon="-0.38731998219848585" lat="0.434619937694702" />
+  <node id="-50034" action="modify" visible="true" lon="-0.3702527814864247" lat="0.8595932354250095" />
+  <node id="-50035" action="modify" visible="true" lon="-0.3592033170118043" lat="0.9660505652649416" />
+  <node id="-50036" action="modify" visible="true" lon="-0.3268079263317887" lat="1.0652530040053385" />
+  <node id="-50037" action="modify" visible="true" lon="-0.2752743017853039" lat="1.1504400693858248" />
+  <node id="-50038" action="modify" visible="true" lon="-0.20811437472185013" lat="1.2158064036789984" />
+  <node id="-50039" action="modify" visible="true" lon="-0.12990498318377597" lat="1.2568973992257568" />
+  <node id="-50040" action="modify" visible="true" lon="-0.04597596795727554" lat="1.2709127725856693" />
+  <node id="-50041" action="modify" visible="true" lon="0.9319746328437954" lat="1.2455499999999997" />
+  <node id="-50042" action="modify" visible="true" lon="1.054742768135295" lat="1.2387254116599902" />
+  <node id="-50043" action="modify" visible="true" lon="2.0275732087227443" lat="1.202884290164663" />
+  <way id="-10000" action="modify" visible="true">
+    <nd ref="-50000" />
+    <nd ref="-50001" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1001" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="5" />
+    <tag k="oneway" v="B" />
+    <tag k="layer" v="0" />
+    <tag k="park" v="1" />
+  </way>
+  <way id="-10002" action="modify" visible="true">
+    <nd ref="-50001" />
+    <nd ref="-50002" />
+    <nd ref="-50003" />
+    <nd ref="-50004" />
+    <nd ref="-50005" />
+    <nd ref="-50006" />
+    <nd ref="-50007" />
+    <nd ref="-50008" />
+    <nd ref="-50009" />
+    <nd ref="-50010" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1003" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="5" />
+    <tag k="oneway" v="B" />
+  </way>
+  <way id="-10004" action="modify" visible="true">
+    <nd ref="-50011" />
+    <nd ref="-50012" />
+    <nd ref="-50013" />
+    <nd ref="-50014" />
+    <nd ref="-50015" />
+    <nd ref="-50016" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1005" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+  </way>
+  <way id="-10005" action="modify" visible="true">
+    <nd ref="-50016" />
+    <nd ref="-50017" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1006" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10006" action="modify" visible="true">
+    <nd ref="-50017" />
+    <nd ref="-50018" />
+    <nd ref="-50019" />
+    <nd ref="-50020" />
+    <nd ref="-50021" />
+    <nd ref="-50022" />
+    <nd ref="-50023" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1007" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+  </way>
+  <way id="-10007" action="modify" visible="true">
+    <nd ref="-50023" />
+    <nd ref="-50024" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1008" />
+    <tag k="mode1" v="0" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10008" action="modify" visible="true">
+    <nd ref="-50024" />
+    <nd ref="-50025" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1009" />
+    <tag k="mode1" v="0" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10009" action="modify" visible="true">
+    <nd ref="-50025" />
+    <nd ref="-50026" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1010" />
+    <tag k="mode1" v="0" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10010" action="modify" visible="true">
+    <nd ref="-50026" />
+    <nd ref="-50027" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1011" />
+    <tag k="mode1" v="0" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10011" action="modify" visible="true">
+    <nd ref="-50027" />
+    <nd ref="-50028" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1012" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10012" action="modify" visible="true">
+    <nd ref="-50028" />
+    <nd ref="-50029" />
+    <nd ref="-50030" />
+    <nd ref="-50031" />
+    <nd ref="-50032" />
+    <nd ref="-50033" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1013" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+  </way>
+  <way id="-10013" action="modify" visible="true">
+    <nd ref="-50033" />
+    <nd ref="-50034" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1014" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10014" action="modify" visible="true">
+    <nd ref="-50034" />
+    <nd ref="-50035" />
+    <nd ref="-50036" />
+    <nd ref="-50037" />
+    <nd ref="-50038" />
+    <nd ref="-50039" />
+    <nd ref="-50040" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1015" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+  </way>
+  <way id="-10015" action="modify" visible="true">
+    <nd ref="-50040" />
+    <nd ref="-50041" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1016" />
+    <tag k="mode1" v="0" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10016" action="modify" visible="true">
+    <nd ref="-50041" />
+    <nd ref="-50042" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1017" />
+    <tag k="mode1" v="0" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10017" action="modify" visible="true">
+    <nd ref="-50042" />
+    <nd ref="-50043" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1018" />
+    <tag k="mode1" v="0" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10018" action="modify" visible="true">
+    <nd ref="-50043" />
+    <nd ref="-50010" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1019" />
+    <tag k="mode1" v="0" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+  <way id="-10019" action="modify" visible="true">
+    <nd ref="-50010" />
+    <nd ref="-50011" />
+    <tag k="highway" v="primary" />
+    <tag k="ref" v="1020" />
+    <tag k="mode1" v="8" />
+    <tag k="mode2" v="0" />
+    <tag k="oneway" v="F" />
+    <tag k="layer" v="0" />
+  </way>
+</osm>

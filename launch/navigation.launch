@@ -1,0 +1,22 @@
+<launch>
+
+<rosparam file="$(find turn_on_wheeltec_robot)/config/global_param.yaml" command="load"/>
+
+<arg name="map_file" default="$(find autonomous_driving)/map/map_20250214121530.yaml"/>
+<arg name="osm_file" default="$(find autonomous_driving)/map/map_20250214121530.osm"/>
+
+<arg name="map_mqtt_file" default="$(find autonomous_driving)/map/map2025.yaml"/>
+
+<!-- <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/> -->
+<node pkg="map_server" name="map_server_mqtt" type="map_server" args="$(arg map_mqtt_file)">
+    <param name="frame_id" value="map_mqtt" />
+    <remap from="/map" to="/map_mqtt" />
+</node>
+
+<node pkg="autonomous_driving" type="navigation_osmnx.py" name="navigation_node" output="screen" respawn="false">
+ <param name="osm_filename" type="string" value="$(arg osm_file)"/> 
+ <param name="loop_rate" type="int" value="100"/> 
+
+</node>
+
+</launch>

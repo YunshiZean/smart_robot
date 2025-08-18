@@ -1,0 +1,4 @@
+geomdl>=5.3.1
+osmnx
+colorlog
+sudo apt-get install ros-noetic-map-server
