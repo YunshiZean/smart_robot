@@ -118,6 +118,10 @@ class NavigationNode:
         elif msg.data == "/continue":
             rospy.logerr(": continue")
             self.cmd_pause = False
+        elif msg.data == "/stop":
+            rospy.logerr(": stop")
+            self.target_queue = None
+            self.navigation.clear_path()
 
 
     def nav_goal_callback(self, msg):
@@ -126,19 +130,6 @@ class NavigationNode:
             logger.info("收到: %s", str((msg.point.x, msg.point.y)))
         except queue.Full:
             rospy.logerr("已经塞满了")
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
