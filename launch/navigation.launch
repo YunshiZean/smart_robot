@@ -2,12 +2,18 @@
 
 <rosparam file="$(find turn_on_wheeltec_robot)/config/global_param.yaml" command="load"/>
 
-<arg name="map_file" default="$(find autonomous_driving)/map/map_20250214121530.yaml"/>
-<arg name="osm_file" default="$(find autonomous_driving)/map/map_20250214121530.osm"/>
+<!-- <arg name="map_file" default="$(find autonomous_driving)/map/map2025.yaml"/>  -->
 
-<arg name="map_mqtt_file" default="$(find autonomous_driving)/map/map2025.yaml"/>
+
+<arg name="osm_file" default="$(find autonomous_driving)/map/way2025.osm"/>
+<arg name="map_mqtt_file" default="$(find autonomous_driving)/map/test.yaml"/>
+
+
 
 <!-- <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/> -->
+
+
+
 <node pkg="map_server" name="map_server_mqtt" type="map_server" args="$(arg map_mqtt_file)">
     <param name="frame_id" value="map_mqtt" />
     <remap from="/map" to="/map_mqtt" />

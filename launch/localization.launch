@@ -16,7 +16,7 @@
 
 <launch>
   <param name="/use_sim_time" value="false" />
-  <arg name="map_pbstream_file" default="$(find autonomous_driving)/map/map_20250214121530.pbstream"/>
+  <arg name="map_pbstream_file" default="$(find autonomous_driving)/map/test.pbstream"/>
 
 
   <!-- <include file="$(find autonomous_driving)/launch/sensor.launch">

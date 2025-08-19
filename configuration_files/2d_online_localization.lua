@@ -20,7 +20,7 @@ TRAJECTORY_BUILDER_2D.max_range = 8.
 options.publish_tracked_pose = true
 
 TRAJECTORY_BUILDER_2D.use_imu_data = true
-TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
+TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = false
 
 -- TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 1
 -- TRAJECTORY_BUILDER_2D.submaps.num_range_data = 160
