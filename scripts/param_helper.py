@@ -8,7 +8,7 @@ class ParamHelper:
     DBL_CAR_STOP_DIST = 0.5 #双车追逐停车间距
 
     MAX_LINEAR_SPEED = 0.35
-    MAX_ANGULAR_SPEED = np.radians(90.0)
+    MAX_ANGULAR_SPEED = 0.5#np.radians(90.0)
 
     LOOK_AHEAD_DISTANCE = 0.25
 

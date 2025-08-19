@@ -1,0 +1,22 @@
+<launch>
+  <include file="$(find turn_on_wheeltec_robot)/launch/turn_on_wheeltec_robot.launch"/>
+  <include file="$(find autonomous_driving)/launch/sensor.launch"/>
+    
+	<arg name="map_pbstream_file" default="$(find autonomous_driving)/map/map_20250814153802.pbstream"/>
+	<arg name="map_file" default="$(find autonomous_driving)/map/map_20250814153802.yaml"/>
+
+	<node name="cartographer_node" pkg="cartographer_ros"
+		type="cartographer_node" args="          
+			-configuration_directory $(find autonomous_driving)/configuration_files
+			-configuration_basename localization_move_base.lua
+			-load_state_filename $(arg map_pbstream_file)"
+		output="screen">
+	</node>
+
+    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+    <!-- <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+    type="cartographer_occupancy_grid_node" args="-resolution 0.05" />         -->
+
+
+</launch>

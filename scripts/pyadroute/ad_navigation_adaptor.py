@@ -58,7 +58,7 @@ class AdNavigationAdapter:
             self.Kp_beta = 0.08
             self.obstacle_dist = 0.3
             self.MAX_LINEAR_SPEED = 0.4
-            self.MAX_ANGULAR_SPEED = np.radians(45.0)
+            self.MAX_ANGULAR_SPEED = 0.5#np.radians(45.0)
             self.LOOK_AHEAD_DISTANCE = 0.15
             self.Refine_Path_Step = 0.01
 
