@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-#0.0.7
+#0.0.8
 import queue
 from queue import Queue, SimpleQueue
 from pyadroute.utils.logger import get_logger
@@ -120,14 +120,14 @@ class NavigationNode:
             self.cmd_pause = False
         elif msg.data == "/stop":
             rospy.logerr(": stop")
-            self.target_queue = None
+            self.target_queue = SimpleQueue()
             self.navigation.clear_path()
 
 
-    def nav_goal_callback(self, msg):
+    def nav_goal_callback(self, msg: PointStamped):
         try:
             self.target_queue.put_nowait((msg.point.x, msg.point.y))
-            logger.info("收到: %s", str((msg.point.x, msg.point.y)))
+            logger.error("收到: %s", str((msg.point.x, msg.point.y)))
         except queue.Full:
             rospy.logerr("已经塞满了")
 
