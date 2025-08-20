@@ -28,7 +28,7 @@ from geometry_msgs.msg import Pose
 from turn_on_wheeltec_robot.msg import TrafficSignal, TrafficLights
 
 # Parameters
-MIN_TARGET_DISTANCE = 0.03
+MIN_TARGET_DISTANCE = 0.05
 
 VEHICLE_WIDTH = 0.20 + 0.04
 OBSTACLE_TIMEOUT = 2.0  # 2 second

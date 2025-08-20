@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-#0.0.6
+#0.0.7
 import queue
 from queue import Queue, SimpleQueue
 from pyadroute.utils.logger import get_logger
