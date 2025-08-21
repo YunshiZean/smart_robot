@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-#0.0.8
+#0.0.9
 import queue
 from queue import Queue, SimpleQueue
 from pyadroute.utils.logger import get_logger
@@ -68,7 +68,7 @@ class NavigationNode:
         self.other_car_pose = None
         self.tracked_pose = None
         self.target_queue = SimpleQueue()
-
+        self.target_queue = queue.Queue(maxsize=200)
         self.master_cmd = None
         self.last_cmd = None
 
@@ -120,7 +120,7 @@ class NavigationNode:
             self.cmd_pause = False
         elif msg.data == "/stop":
             rospy.logerr(": stop")
-            self.target_queue = SimpleQueue()
+            self.target_queue = queue.Queue(maxsize=200)
             self.navigation.clear_path()
 
 
@@ -130,6 +130,8 @@ class NavigationNode:
             logger.error("收到: %s", str((msg.point.x, msg.point.y)))
         except queue.Full:
             rospy.logerr("已经塞满了")
+        except AttributeError:
+            rospy.logerr("参数错误")
 
 
 
@@ -207,6 +209,8 @@ class NavigationNode:
             logger.info("Clicked point: %s", str((msg.point.x, msg.point.y)))
         except queue.Full:
             rospy.logerr("target_queue was full.")
+        except AttributeError:
+            logger.error("不是吧老弟，又是空的？")
 
     def callback_mastercmd(self, msg: MasterCmd):
         self.set_cmd(msg)
