@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-#0.0.9
+#0.0.10
 import queue
 from queue import Queue, SimpleQueue
 from pyadroute.utils.logger import get_logger
@@ -68,7 +68,6 @@ class NavigationNode:
         self.other_car_pose = None
         self.tracked_pose = None
         self.target_queue = SimpleQueue()
-        self.target_queue = queue.Queue(maxsize=200)
         self.master_cmd = None
         self.last_cmd = None
 
@@ -120,7 +119,11 @@ class NavigationNode:
             self.cmd_pause = False
         elif msg.data == "/stop":
             rospy.logerr(": stop")
-            self.target_queue = queue.Queue(maxsize=200)
+            while True:
+                try:
+                    _ = self.target_queue.get_nowait()
+                except queue.Empty:
+                    break
             self.navigation.clear_path()
 
 
@@ -157,6 +160,7 @@ class NavigationNode:
         if self.navigation.pathw is None:
             try:
                 target_point = self.target_queue.get_nowait()
+                logger.error("取出一个")
             except queue.Empty:
                 pass
 
