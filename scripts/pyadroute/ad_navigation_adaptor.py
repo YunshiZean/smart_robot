@@ -232,20 +232,38 @@ class AdNavigationAdapter:
         return route, pathw, position_start, position_end
 
     def make_route_muti_point(self, point_list) -> list:
+        """
+        根据多个路径点生成完整路径
+        
+        该函数通过连接相邻路径点之间的路径段，构建一条经过所有指定点的完整路径。
+        同时设置路径跟踪器和障碍物检测器的相关路径信息。
+        
+        参数:
+            point_list: 路径点列表，每个元素应包含路径点的坐标信息
+            
+        返回:
+            list: 包含所有有效路径段端点位置的列表
+        """
         pathw_m = None
         positions = []
+        # 如果路径点列表有效且包含至少两个点，则进行路径规划
         if point_list is not None and len(point_list) > 1:
+            # 遍历相邻的路径点对，依次规划路径段
             for ps, pe in zip(point_list[:-1], point_list[1:]):
                 _, pw, pos_start, pos_end = self.make_route(ps, pe)
+                # 检查路径段是否有效，如果有效则连接到总路径中
                 if is_pathw_valid(pw):
                     pathw_m = pathw_concatenation(pathw_m, pw)
+                    # 记录路径段的起始和结束位置
                     if len(positions) == 0:
                         positions.append(pos_start)
                     positions.append(pos_end)
 
+        # 计算路径上各点的偏航角
         pathw_m.calc_yaw_np()
         self.pathw = pathw_m
 
+        # 设置路径跟踪器和障碍物检测器的路径信息
         self.path_tracking.set_pathw(pathw_m)
         self.obstacle_detector.set_pathw(pathw_m, VEHICLE_WIDTH / 2)
 

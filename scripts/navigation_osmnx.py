@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-#0.0.10
+#0.0.19
 import queue
 from queue import Queue, SimpleQueue
 from pyadroute.utils.logger import get_logger
@@ -129,12 +129,20 @@ class NavigationNode:
 
     def nav_goal_callback(self, msg: PointStamped):
         try:
+            self.cmd_pause = True
+            self.navigation.clear_path()
+            while True:
+                try:
+                    _ = self.target_queue.get_nowait()
+                except queue.Empty:
+                    break
             self.target_queue.put_nowait((msg.point.x, msg.point.y))
-            logger.error("收到: %s", str((msg.point.x, msg.point.y)))
+            self.cmd_pause = False
+            logger.warning("收到: %s", str((msg.point.x, msg.point.y)))
         except queue.Full:
-            rospy.logerr("已经塞满了")
+            logger.error("已经塞满了")
         except AttributeError:
-            rospy.logerr("参数错误")
+            logger.error("参数错误")
 
 
 
@@ -156,7 +164,20 @@ class NavigationNode:
         rospy.loginfo("------Navigation Node stop-------")
 
     def process_loop(self):
+        """
+        处理导航循环的主要逻辑函数
+        
+        该函数负责从目标队列中获取目标点，生成路径，并根据当前跟踪位姿计算速度指令。
+        主要包括路径规划、速度控制和指令发布等功能。
+        
+        参数:
+            无
+            
+        返回值:
+            无
+        """
         target_point = None
+        # 如果当前没有路径，则尝试从目标队列中获取新的目标点
         if self.navigation.pathw is None:
             try:
                 target_point = self.target_queue.get_nowait()
@@ -164,10 +185,12 @@ class NavigationNode:
             except queue.Empty:
                 pass
 
+        # 执行主控制逻辑
         self.master_cmd_logic()
         tracked_pose = self.tracked_pose  # thread safe
 
         if tracked_pose is not None:
+            # 如果没有路径且成功获取到目标点，则创建新路径
             if self.navigation.pathw is None and target_point is not None:
                 point_start = (
                     tracked_pose.pose.position.x,
@@ -175,6 +198,7 @@ class NavigationNode:
                 )
                 self.make_path([point_start, target_point])
 
+            # 处理导航循环，计算距离、线速度、角速度等信息
             (
                 distance,
                 linear_speed,
@@ -182,23 +206,56 @@ class NavigationNode:
                 nearest_point_index,
                 point_target_idx,
             ) = self.navigation.process_loop(tracked_pose.pose)
+            
+            # 如果已到达目标点，发布到达消息
             if self.navigation.Is_arrive:
+                logger.error("到了")
+                # self.nav_cmd_callback(String("/stop"))
                 self.result.publish(String("/arrive"))
                 self.navigation.Is_arrive = False
+                
+            # 根据车辆距离控制调整速度
             linear_speed, angle_speed = self.control_dbl_car_distance(
                 linear_speed, angle_speed, nearest_point_index
             )
             
+            # 发布速度控制指令
+            #logger.error("发布速度控制指令")
             self.publish_cmd_vel(linear_speed, angle_speed)
         else:
+            # 如果没有跟踪到位姿信息，则发布零速度指令
             self.publish_cmd_vel(0, 0)
 
     def make_path(self, point_list):
+        """
+        根据给定的点列表生成导航路径
+        
+        :param point_list: 点坐标列表，用于生成路径的途经点
+        :return: 无返回值
+        
+        该函数首先检查点列表是否有效，然后调用导航模块生成多点路径，
+        如果路径有效则发布路径信息，否则记录错误日志并清理路径数据。
+        """
+        # 检查点列表是否有效（非空且至少包含两个点）
         if point_list is not None and len(point_list) > 1:
-            positions = self.navigation.make_route_muti_point(point_list)
-            if self.navigation.is_path_valid():
-                self.publish_path(self.navigation.pathw.path)
-                self.publish_path_endpoint(positions)
+            try:
+                # 调用导航模块生成多点路径
+                positions = self.navigation.make_route_muti_point(point_list)
+                
+                # 验证生成的路径是否有效
+                if self.navigation.is_path_valid():
+                    # 发布路径信息和路径端点信息
+                    self.publish_path(self.navigation.pathw.path)
+                    self.publish_path_endpoint(positions)
+                    logger.warning("make path 成功")
+                else:
+                    # 路径无效时记录错误日志并清理路径数据
+                    logger.error("无法到达目标点，make path失败")
+                    self.navigation.clear_path()
+            except Exception as e:
+                # 异常处理：记录错误日志并清理路径数据
+                logger.error(f"make path 失败：{e}")
+                self.navigation.clear_path()
 
     def callback_cloudpoint(self, msg):
         self.navigation.obstacle_detector.set_pointcloud(msg)
@@ -241,13 +298,46 @@ class NavigationNode:
             self.pub_path.publish(msg)
 
     def publish_path_endpoint(self, positions):
+        """
+        发布路径端点标记到ROS话题
+        
+        该函数将位置信息转换为MarkerArray消息并发布到指定的话题中，
+        用于在ROS环境中可视化路径的端点位置。
+        
+        参数:
+            positions: 路径端点的位置信息，具体格式取决于roser.create_path_endpoint_MarkerArray的实现
+            
+        返回值:
+            无返回值
+            
+        发布:
+            将生成的MarkerArray消息发布到self.pub_point话题
+        """
         msg = roser.create_path_endpoint_MarkerArray(positions)
+        # 如果消息创建成功，则发布消息
         if msg is not None:
             self.pub_point.publish(msg)
 
     def public_obstacle_area(self):
+        """
+        发布障碍物检测区域信息
+        
+        该函数获取当前导航模块中的障碍物检测区域坐标，将其转换为ROS消息格式，
+        并通过指定的话题发布出去。
+        
+        参数:
+            无
+            
+        返回值:
+            无
+        """
+        # 获取障碍物检测区域的坐标信息
         detect_area = self.navigation.obstacle_detector.get_detect_area_coords()
+        
+        # 创建线条消息用于可视化检测区域
         msg = roser.create_line_strip_msg(detect_area)
+        
+        # 如果消息创建成功，则发布消息
         if msg is not None:
             self.pub_obstacle_area.publish(msg)
 
@@ -259,21 +349,36 @@ class NavigationNode:
         self.pub_cmd_vel.publish(msg)
 
     def master_cmd_logic(self):
+        """
+        处理主控命令的逻辑，根据命令内容生成对应的路径规划。
+        
+        该函数会根据主控命令的内容判断是否需要进行编队行驶或普通路径规划，
+        并调用make_path方法生成相应的路径。处理完成后会清空主控命令。
+
+        Returns:
+            bool: 如果成功处理了命令并生成了路径则返回True，否则返回False
+        """
         cmd: MasterCmd = self.master_cmd
         if cmd is None:
             return
 
         finished = False
         self.double_car_pursuit = False
+        
+        # 处理停止命令
         if cmd.start == 0:
             self.navigation.clear_path()
             finished = True
         else:
+            # logger.warning(f"哟呵，新命令来了：{cmd}")
+            # 判断是否为编队行驶模式
             if cmd.cid != cmd.set_leader and cmd.forma > 0:
+                # logger.warning("编队行驶模式")
                 # Formation driving
                 other_car_pose = self.other_car_pose
                 tracked_pose = self.tracked_pose  # thread safe
                 if other_car_pose is not None and tracked_pose is not None:
+                    # 构造四点路径：当前位姿 -> 其他车辆位姿 -> 起始点 -> 终点
                     p0 = (
                         tracked_pose.pose.position.x,
                         tracked_pose.pose.position.y,
@@ -282,38 +387,57 @@ class NavigationNode:
                         other_car_pose.pose.position.x,
                         other_car_pose.pose.position.y,
                     )
-                    p2 = (cmd.start_rp.position.x, cmd.start_rp.position.y)
+                    # p2 = (cmd.start_rp.position.x, cmd.start_rp.position.y)
                     p3 = (cmd.end_rp.position.x, cmd.end_rp.position.y)
                     # logger.info("master cmd p1 p2: %s,%s", p1, p2)
-                    self.make_path([p0, p1, p2, p3])
+                    # self.make_path([p0, p1, p2, p3])
+                    self.make_path([p0, p1, p3])
                     self.double_car_pursuit = True
                     finished = True
-
             else:
+                # 普通路径规划模式
+                # logger.warning("普通路径规划模式")
                 tracked_pose = self.tracked_pose  # thread safe
                 if tracked_pose is not None:
+                    # 构造三点路径：当前位姿 -> 起始点 -> 终点
                     p0 = (
                         tracked_pose.pose.position.x,
                         tracked_pose.pose.position.y,
                     )
-                    p1 = (cmd.start_rp.position.x, cmd.start_rp.position.y)
+                    # p1 = (cmd.start_rp.position.x, cmd.start_rp.position.y)
                     p2 = (cmd.end_rp.position.x, cmd.end_rp.position.y)
                     # logger.info("master cmd p1 p2: %s,%s", p1, p2)
-                    self.make_path([p0, p1, p2])
+                    # self.make_path([p0, p1, p2])
+                    self.make_path([p0, p2])
                     finished = True
-
+        self.nav_cmd_callback(String("/continue"))
+        # 命令处理完成后清空主控命令
         if finished:
             self.master_cmd = None
 
         return finished
 
     def set_cmd(self, cmd):
+        """
+        设置命令并判断是否为新命令
+        
+        该函数用于设置新的命令，并通过比较命令的关键属性来判断是否为新命令。
+        如果是新命令，则更新master_cmd和last_cmd属性。
+        
+        参数:
+            cmd: 命令对象，包含命令的相关属性
+            
+        返回值:
+            bool: 如果是新命令返回True，否则返回False
+        """
         is_new = False
         logger.info(cmd)
         if cmd is not None:
+            # 判断是否为新命令：如果last_cmd为空，则为新命令
             if self.last_cmd is None:
                 is_new = True
             else:
+                # 比较命令的关键属性，任一属性不同则认为是新命令
                 if cmd.cid != self.last_cmd.cid:
                     is_new = True
                 elif cmd.forma != self.last_cmd.forma:
@@ -326,9 +450,11 @@ class NavigationNode:
                     is_new = True
                 elif cmd.set_leader != self.last_cmd.set_leader:
                     is_new = True
+        # 如果是新命令，则更新master_cmd和last_cmd
         if is_new:
             self.master_cmd = cmd
             self.last_cmd = cmd
+            self.nav_cmd_callback(String("/continue")) #收到命令后，发送/continue命令
         return is_new
 
     def control_dbl_car_distance(self, linear_speed, angle_speed, orin_index):
