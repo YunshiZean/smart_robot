@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-#0.0.19
+#0.0.20
 import queue
 from queue import Queue, SimpleQueue
 from pyadroute.utils.logger import get_logger
@@ -111,6 +111,27 @@ class NavigationNode:
 
     def nav_cmd_callback(self, msg):
         rospy.logerr(": %s" % msg.data)
+        if msg.data == "/test_forward":
+            self.cmd_pause = True
+            self.publish_cmd_vel(0.3,0.0)
+            rospy.sleep(1)
+            self.cmd_pause = False
+        elif msg.data == "/test_backward":
+            self.cmd_pause = True
+            self.publish_cmd_vel(-0.3,0.0)
+            rospy.sleep(1)
+            self.cmd_pause = False
+        elif msg.data == "/test_left":
+            self.cmd_pause = True
+            self.publish_cmd_vel(0.3,0.4)
+            rospy.sleep(1)
+            self.cmd_pause = False
+        elif msg.data == "/test_right":
+            self.cmd_pause = True
+            self.publish_cmd_vel(0.3,-0.4)
+            rospy.sleep(1)
+            self.cmd_pause = False
+
         if msg.data == "/pause":
             rospy.logerr(": pause")
             self.cmd_pause = True
