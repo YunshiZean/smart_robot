@@ -5,7 +5,7 @@ import numpy as np
 class ParamHelper:
     
     DBL_CAR_FOLLOW_DIST = 0.8 #双车追逐最小间距
-    DBL_CAR_STOP_DIST = 0.5 #双车追逐停车间距
+    DBL_CAR_STOP_DIST = 0.8 #双车追逐停车间距
 
     MAX_LINEAR_SPEED = 0.35
     MAX_ANGULAR_SPEED = 0.5#np.radians(90.0)

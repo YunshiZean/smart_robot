@@ -391,6 +391,7 @@ class NavigationNode:
             self.navigation.clear_path()
             finished = True
         else:
+            # logger.warning(f"哟呵，新命令来了：{cmd}")
             # 判断是否为编队行驶模式
             if cmd.cid != cmd.set_leader and cmd.forma > 0:
                 # logger.warning("编队行驶模式")
