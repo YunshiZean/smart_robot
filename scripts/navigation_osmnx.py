@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-#0.0.21
+
+"""
+文件名: central_manager.py
+简介： navigation导航节点
+作者： 未定义实验室.Zean 罗灵轩
+版本： 1.0.0
+说明： navigation导航节点
+更新内容： 第一个稳定版本
+创建时间： 2025.8.5
+最后更新时间： 2025.8.25
+"""
+
 import queue
 from queue import Queue, SimpleQueue
 from pyadroute.utils.logger import get_logger
